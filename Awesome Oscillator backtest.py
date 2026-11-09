@@ -42,7 +42,10 @@ def signal_generation(df,method,ma1,ma2):
     
     signals=method(df,ma1,ma2)
     signals['macd positions']=0
-    signals['macd positions'][ma1:]=np.where(signals['macd ma1'][ma1:]>=signals['macd ma2'][ma1:],1,0)
+    position_col = signals.columns.get_loc('macd positions')
+    signals.iloc[ma1:, position_col] = np.where(
+        signals['macd ma1'].iloc[ma1:] >= signals['macd ma2'].iloc[ma1:], 1, 0
+    )
     signals['macd signals']=signals['macd positions'].diff()
     signals['macd oscillator']=signals['macd ma1']-signals['macd ma2']
     
