@@ -42,7 +42,7 @@
 #daylight saving time is another story
 #what a stupid idea it is
 import os
-os.chdir('d:/')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 import matplotlib.pyplot as plt
 import pandas as pd
 
