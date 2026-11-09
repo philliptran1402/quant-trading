@@ -19,7 +19,7 @@ import fix_yahoo_finance as yf
 # In[2]:
 
 #simple moving average
-def macd(signals):
+def macd(signals, ma1, ma2):
     
     
     signals['ma1']=signals['Close'].rolling(window=ma1,min_periods=1,center=False).mean()
@@ -38,13 +38,16 @@ def macd(signals):
 #we can subtract short moving average from long moving average
 #the difference between is sometimes positive, it sometimes becomes negative
 #thats why it is named as moving average converge/diverge oscillator
-def signal_generation(df,method):
+def signal_generation(df,method,ma1,ma2):
     
-    signals=method(df)
+    signals=method(df,ma1,ma2)
     signals['positions']=0
 
     #positions becomes and stays one once the short moving average is above long moving average
-    signals['positions'][ma1:]=np.where(signals['ma1'][ma1:]>=signals['ma2'][ma1:],1,0)
+    position_col = signals.columns.get_loc('positions')
+    signals.iloc[ma1:, position_col] = np.where(
+        signals['ma1'].iloc[ma1:] >= signals['ma2'].iloc[ma1:], 1, 0
+    )
 
     #as positions only imply the holding
     #we take the difference to generate real trade signal
@@ -110,8 +113,6 @@ def main():
     #so it is two week moving average versus one month moving average
     #for now, the ideal choice would be 10 and 21
     
-    global ma1,ma2,stdate,eddate,ticker,slicer
-
     #macd is easy and effective
     #there is just one issue
     #entry signal is always late
@@ -130,7 +131,7 @@ def main():
     #downloading data
     df=yf.download(ticker,start=stdate,end=eddate)
     
-    new=signal_generation(df,macd)
+    new=signal_generation(df,macd,ma1,ma2)
     new=new[slicer:]
     plot(new, ticker)
 
