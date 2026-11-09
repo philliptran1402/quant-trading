@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 import os
-os.chdir('d:/')
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 # In[2]:

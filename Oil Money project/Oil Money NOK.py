@@ -60,10 +60,12 @@ import statsmodels.api as sm
 import pandas as pd
 import numpy as np
 import seaborn as sns
+import importlib.util
+from pathlib import Path
 from sklearn.linear_model import ElasticNetCV as en 
 from statsmodels.tsa.stattools import adfuller as adf
 import os
-os.chdir('d:/')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 
 
 # In[2]:
@@ -129,8 +131,7 @@ def dual_axis_plot(xaxis,data1,data2,fst_color='r',
 dual_axis_plot(df.index,df['nok'],df['interest rate'],
                fst_color='#34262b',sec_color='#cb2800',
                fig_size=(10,5),x_label='Date',
-               y_label1='NOKJPY',y_label2='Norges Bank Interest Rate 
-               %',
+               y_label1='NOKJPY',y_label2='Norges Bank Interest Rate (%)',
                legend1='NOKJPY',legend2='Interest Rate',
                grid=False,title='NOK vs Interest Rate')
 
@@ -459,7 +460,12 @@ plt.show()
 #here i would only import the strategy script as this is a script for analytics and visualization
 #the official trading strategy script is in the following link
 # https://github.com/je-suis-tm/quant-trading/blob/master/Oil%20Money%20project/Oil%20Money%20Trading%20backtest.py
-import oil_money_trading_backtest as om
+_backtest_path = Path(__file__).with_name('Oil Money Trading backtest.py')
+_backtest_spec = importlib.util.spec_from_file_location(
+    'oil_money_trading_backtest', _backtest_path
+)
+om = importlib.util.module_from_spec(_backtest_spec)
+_backtest_spec.loader.exec_module(om)
 
 #generate signals,monitor portfolio performance
 #plot positions and total asset
@@ -478,7 +484,7 @@ om.profit(p,'nok')
 dic={}
 for holdingt in range(5,20):
     for stopp in np.arange(0.3,1.1,0.05):
-        signals=om.signal_generation(dataset,'brent','nok',om.oil_money \
+        signals=om.signal_generation(dataset,'brent','nok',om.oil_money, \
                                      holding_threshold=holdingt, \
                                      stop=stopp)
         

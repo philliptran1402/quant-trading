@@ -159,8 +159,8 @@ def signal_generation(asset1,asset2,method,bandwidth=250):
             #create thresholds
             #conventionally one sigma is the threshold
             #two sigma reaches 95% which is relatively difficult to trigger
-            signals['z upper limit'].iloc[i:]=signals['z'].iloc[i]+np.std(model.resid)
-            signals['z lower limit'].iloc[i:]=signals['z'].iloc[i]-np.std(model.resid)
+            signals.iloc[i:, signals.columns.get_loc('z upper limit')]=1.0
+            signals.iloc[i:, signals.columns.get_loc('z lower limit')]=-1.0
         
         #as z stat cannot exceed both upper and lower bounds at the same time
         #the lines below hold

@@ -7,11 +7,13 @@
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+import importlib.util
 import statsmodels.api as sm
 import seaborn as sns
 import numpy as np
+from pathlib import Path
 from sklearn.model_selection import train_test_split
-os.chdir('k:/')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 
 
 # In[2]:
@@ -297,7 +299,12 @@ dataset.reset_index(inplace=True)
 #import the strategy script as this is a script for analytics and visualization
 #the official trading strategy script is in the following link
 # https://github.com/je-suis-tm/quant-trading/blob/master/Oil%20Money%20project/Oil%20Money%20Trading%20backtest.py
-import oil_money_trading_backtest as om
+_backtest_path = Path(__file__).with_name('Oil Money Trading backtest.py')
+_backtest_spec = importlib.util.spec_from_file_location(
+    'oil_money_trading_backtest', _backtest_path
+)
+om = importlib.util.module_from_spec(_backtest_spec)
+_backtest_spec.loader.exec_module(om)
 
 #generate signals,monitor portfolio performance
 #plot positions and total asset

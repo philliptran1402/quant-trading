@@ -10,7 +10,7 @@ import pandas as pd
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import cvxopt
-os.chdir('H:/')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 
 
 # ### define functions
@@ -75,8 +75,10 @@ def lin_reg(crops,grande,malay_gdp,malay_pop,viz=False):
 
 def constrained_ols(x,y):
 
-    linear_coeff=cvxopt.matrix(-1*np.mat(y.tolist())*np.mat(x)).T
-    quadratic_coeff=cvxopt.matrix(np.mat(x).T*np.mat(x))
+    x_values=x.to_numpy(dtype=float)
+    y_values=np.asarray(y,dtype=float).reshape(1,-1)
+    linear_coeff=cvxopt.matrix(-1*y_values@x_values).T
+    quadratic_coeff=cvxopt.matrix(x_values.T@x_values)
 
     #inequality constraint
     inequality_coeff=cvxopt.matrix(0.0,(len(x.columns),len(x.columns)))
@@ -117,8 +119,8 @@ def get_params(crops,grande,malay_gdp,malay_pop,viz=False):
         if viz:
 
             #get forecast and convert to list
-            forecast=np.mat(ans).T*np.mat(x).T
-            forecast=forecast.ravel().tolist()[0]
+            forecast=np.asarray(ans,dtype=float).reshape(1,-1)@x.to_numpy(dtype=float).T
+            forecast=forecast.ravel().tolist()
             fig=plt.figure(figsize=(10,5))
             ax=fig.add_subplot(111)
             ax.spines['top'].set_visible(False)
@@ -274,7 +276,8 @@ palm_futures.index=pd.to_datetime(palm_futures.index)
 
 
 #concat, currency convert and get annual avg
-temp=palm['Palm oil'][str(beginyear):].apply(lambda x:x*0.23).append(palm_futures['Palm oil'][:str(endyear+5)])
+temp=pd.concat([palm['Palm oil'][str(beginyear):].apply(lambda x:x*0.23),
+                palm_futures['Palm oil'][:str(endyear+5)]])
 
 palmoil=temp.resample('1A').mean()
 
@@ -289,7 +292,8 @@ palmoil.index=[pd.to_datetime(str(i)[:5]+'01-01') for i in palmoil.index]
 oilpalm_act=grand['price'][grand['Item']=='Oil palm fruit']
 oilpalm_act.reset_index(inplace=True,drop=True)
 
-oilpalm_est=oilpalm_act.iloc[-1:].append(forecast['price'][forecast['Item']=='Oil palm fruit'])
+oilpalm_est=pd.concat([oilpalm_act.iloc[-1:],
+                       forecast['price'][forecast['Item']=='Oil palm fruit']])
 oilpalm_est.reset_index(inplace=True,drop=True)
 
 

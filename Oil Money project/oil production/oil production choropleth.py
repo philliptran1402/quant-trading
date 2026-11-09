@@ -6,7 +6,7 @@
 
 import folium
 import os
-os.chdir('h:/')
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import pandas as pd
 
 
@@ -72,7 +72,7 @@ m.choropleth(
 #layout control is just a map filter
 #we can unselect choropleth any time
 folium.LayerControl().add_to(m)
-display(m)
+m.save('oil production choropleth.html')
 
 #in general, folium is a really good wrap up for leaflet.js
 #it saves me a lot of time from learning javascript

@@ -54,7 +54,7 @@ target_year=[2000,
 import pandas as pd
 import numpy as np
 import os
-os.chdir('H:/')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 
 
 # In[4]:

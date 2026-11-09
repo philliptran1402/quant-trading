@@ -16,7 +16,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score,silhouette_samples
 from sklearn.model_selection import train_test_split
-os.chdir('d:/')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 
 
 # In[2]:

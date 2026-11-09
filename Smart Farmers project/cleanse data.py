@@ -5,7 +5,7 @@
 
 
 import os
-os.chdir('H:/')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 import pandas as pd
 import numpy as np
 
@@ -120,7 +120,7 @@ gdp=pd.read_csv('Macro-Statistics_Key_Indicators_E_All_Data_(Normalized).csv',
 # In[6]:
 
 
-os.chdir('H:/data')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 
 
 # In[7]:
@@ -199,7 +199,7 @@ cereal_prix['Item Code']=1817
 
 
 #add missing
-malay_prix=malay_prix.append(oilseeds_prix).append(cereal_prix)
+malay_prix=pd.concat([malay_prix,oilseeds_prix,cereal_prix])
 
 malay_prix.reset_index(inplace=True,drop=True)
 
@@ -243,7 +243,7 @@ land_2018.reset_index(inplace=True,drop=True)
 land_2018.at[0,'Year']=2018
 land_2018.at[0,'Year Code']=2018
 
-malay_land=malay_land.append(land_2018)
+malay_land=pd.concat([malay_land,land_2018])
 
 
 # In[18]:

@@ -10,7 +10,7 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import re
 
-os.chdir('d:/')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 df=pd.read_csv('urals crude rubaud.csv')
 
 

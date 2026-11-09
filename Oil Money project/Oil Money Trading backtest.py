@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-os.chdir('d:/')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 
 
 # In[2]:

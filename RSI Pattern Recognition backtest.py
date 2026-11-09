@@ -81,7 +81,7 @@ def rsi(data,n=14):
 def signal_generation(df,method,n=14):
     
     df['rsi']=0.0
-    df['rsi'][n:]=method(df['Close'],n=14)
+    df.loc[df.index[n:], 'rsi'] = method(df['Close'], n=n)
     
     df['positions']=np.select([df['rsi']<30,df['rsi']>70], \
                               [1,-1],default=0)
@@ -151,7 +151,7 @@ def plot(new,ticker):
 def pattern_recognition(df,method,lag=14):
     
     df['rsi']=0.0
-    df['rsi'][lag:]=method(df['Close'],lag)    
+    df.loc[df.index[lag:], 'rsi'] = method(df['Close'], lag)
     
     #as usual, period is defined as the horizon for finding the pattern
     period=25    

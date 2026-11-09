@@ -16,7 +16,7 @@ import dateutil
 import decimal
 import os
 import numpy as np
-os.chdir('K:/ecole/github/televerser/données')
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
 
 
 # In[2]:
